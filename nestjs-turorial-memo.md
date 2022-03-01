@@ -77,3 +77,125 @@ $ nest start
 http://localhost:3000/ へアクセスすると、Hello World!　の文字が！
 
 ディレクトリ階層について
+
+メインは src フォルダ
+root 直下には E2E テスト用の test フォルダもいるが、今回は触れない。
+
+```md
+src/
+|- app.controller.spec.ts
+|- app.controller.ts
+|- app.module.ts
+|- app.service.ts
+|- main.ts
+```
+
+では一つずつ説明していく。
+
+https://docs.nestjs.com/first-steps#setup
+
+まず Nest.js でサーバーを立ち上げる上で以下の 4 つのファイルが必須となります。
+
+- main
+- controllers
+- providers
+- modules
+
+これらの役割を先程の`src/`直下のファイルと紐付けながら説明していきます。
+
+## main.ts
+
+main の役割を司るのがこのファイルです。
+Nest.js アプリのエントリーポイントとなり、サーバのインスタンスを作成＆サーバーの起動はこのファイルからのみ行います。
+
+[Express](https://expressjs.com/)を扱ったことがある人には`const app = express()`〜`app.listen()`と同じことしているなぁって思ってもらえば大丈夫です。
+
+```ts: src/main.ts
+import { NestFactory } from '@nestjs/core';
+import { AppModule } from './app.module';
+
+async function bootstrap() {
+  // NestFactoryというFunctionでNest.jsアプリのインスタンスを生成
+  const app = await NestFactory.create(AppModule);
+  // 3000番portでサーバーを立ち上げる
+  await app.listen(3000);
+}
+bootstrap();
+```
+
+## app.controller.ts / app.controller.spec.ts
+
+`controllers`の役割を司るファイルです。サーバーのルーティングを行う箇所です。
+初期コードでは`@Get()`デコレーターを使用し、GET で`[rootURL]/`を叩いたとき呼び出される`getHello`メソッドが定義されています。
+
+今回は触れませんが、いわゆるリダイレクトや認証確認などのガード処理もここで設定します。
+`AppService`については後で説明します。
+
+```ts: src/app.controller.ts
+import { Controller, Get } from '@nestjs/common';
+import { AppService } from './app.service';
+
+@Controller()
+export class AppController {
+  constructor(private readonly appService: AppService) {}
+
+  @Get()
+  getHello(): string {
+    return this.appService.getHello();
+  }
+}
+```
+
+なお、`app.controller.spec.ts`は JS/TS のユニットテスト作成ライブラリである[Jest](https://jestjs.io/ja/) を使って、`app.controller.ts`のテストコードを作成する箇所です。
+
+## app.service.ts
+
+`providers`の役割を司るファイルです。`controllers`の処理を詳細に定義する場所だと思ってもらえば大丈夫です。
+
+今回は詳しく触れませんが、ここでは`@Injectable()`デコレーターを使用しており、DI（Dependency Injection/依存性注入）の仕組みが使用されています。
+
+DI についてもっと知りたい方はこちらの資料を読んだみてください。
+https://qiita.com/hinom77/items/1d7a30ba5444454a21a8
+https://qiita.com/ritukiii/items/de30b2d944109521298f
+
+```ts: src/app.service.ts
+import { Injectable } from '@nestjs/common';
+
+@Injectable()
+export class AppService {
+  // APIが呼び出されたときに'Hello World!'を返却するメソッドを定義
+  getHello(): string {
+    return 'Hello World!';
+  }
+}
+```
+
+## app.module.ts
+
+`modules`の役割を司るファイルです。`controllers` とか `providers` を取りまとめるところです。
+
+```ts: src/app.module.ts
+import { Module } from '@nestjs/common';
+import { AppController } from './app.controller';
+import { AppService } from './app.service';
+
+@Module({
+  imports: [],
+  controllers: [AppController],
+  providers: [AppService],
+})
+export class AppModule {}
+
+```
+
+# 今後したいこと
+
+デコレーターや Angular ライクな書き方にまだまだ慣れていないので、まずは公式の Overview の全ページを一周しようと思っています。ずっと勉強できてなかった TypeORM の活用 や GraphQL 実装あたりにも踏み込めればと思っています。
+
+# 参考にしたページ
+
+https://docs.nestjs.com/first-steps
+
+https://zenn.dev/hakushun/articles/0b0443ac6fd8d7
+
+https://qiita.com/elipmoc101/items/9b1e6b3efa62f3c2a166
