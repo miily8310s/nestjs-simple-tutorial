@@ -1,5 +1,37 @@
 # Nest.js 開発事始めメモ
 
+## Nest.js とは
+
+Nest.js とは Node.js のサーバーサイドフレームワークです。TypeScript（以下 TS）での開発がメインとなりますが、JavaScript（以下 JS）での開発も可能です。
+[Express](https://expressjs.com/)（デフォルト）もしくは[Fastify](https://www.fastify.io/)（オプション）といった HTTP サーバーフレームワークをコアに動作する仕組みとなっており、実際これらの HTTP サーバーフレームワークからメソッド等を`import`してきて使うことも可能です。
+
+https://docs.nestjs.com/
+
+アーキテクチャは[Angular](https://angular.jp/)に強い影響を受けており、デコレーターを活用したコードの記述や開発ルールの強制の仕方/実装と疎結合になるディレクトリ構成にはその影響が伺えます。ただこうした硬めな印象を受けるアーキテクチャのアプローチは、これまで決定打がなく問題となっていた Node.js/サーバーサイド JS 開発のアーキテクチャの難しさを解決するものとなっております。
+
+こうした TS フレンドリーかつアーキテクチャ設計が受け入れられたのか、国内でもここ 1 年の間に採用事例が増えており、今後も増えることが予想されます。
+
+https://engineering.mercari.com/blog/entry/20210818-mercari-shops-nestjs-graphql-server/
+
+https://www.forcia.com/blog/002380.html
+
+https://techblog.yahoo.co.jp/entry/2020121530052952/
+
+また、その他の特徴としては以下が挙げられます。
+
+- RESTAPI だけではなく、もちろん GraphQL サーバーの開発も可能
+- Nest Cli で簡単にアプリやファイルのテンプレートを作成出来る
+- テスト用フレームワークがすでに用意されており、疎結合な構成のおかげでテストコードの作成が容易
+- OpenAPI（Swagger）のサポート（要プラグイン）
+- 豊富な公式ドキュメントとサンプル集
+
+ちなみに公式サイトのハンバーガーメニューが本当にハンバーガーになっている点は個人的にすごく好きです。
+
+## 開発環境
+
+MacBook Pro(M1 2020)
+macOS Monterey 12.1
+
 ## インストール
 
 https://docs.nestjs.com/first-steps#setup
